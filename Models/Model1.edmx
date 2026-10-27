@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PhotoSharingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PhotoID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="200" />
+          <Property Name="Body" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Photos">
+          <Key>
+            <PropertyRef Name="PhotoID" />
+          </Key>
+          <Property Name="PhotoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="ImageFileName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UploadedDate" Type="datetime" />
+          <Property Name="Owner" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_Comments_Photos">
+          <End Role="Photos" Type="Self.Photos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photos">
+              <PropertyRef Name="PhotoID" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="PhotoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PhotoSharingDBModelStoreContainer">
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Photos" EntityType="Self.Photos" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Comments_Photos" Association="Self.FK_Comments_Photos">
+            <End Role="Photos" EntitySet="Photos" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PhotoSharingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhotoID" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Photos" Relationship="Self.FK_Comments_Photos" FromRole="Comments" ToRole="Photos" />
+        </EntityType>
+        <EntityType Name="Photos">
+          <Key>
+            <PropertyRef Name="PhotoID" />
+          </Key>
+          <Property Name="PhotoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ImageFileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <Property Name="Owner" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_Photos" FromRole="Photos" ToRole="Comments" />
+        </EntityType>
+        <Association Name="FK_Comments_Photos">
+          <End Role="Photos" Type="Self.Photos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photos">
+              <PropertyRef Name="PhotoID" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="PhotoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PhotoSharingDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Comments" EntityType="Self.Comments" />
+          <EntitySet Name="Photos" EntityType="Self.Photos" />
+          <AssociationSet Name="FK_Comments_Photos" Association="Self.FK_Comments_Photos">
+            <End Role="Photos" EntitySet="Photos" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PhotoSharingDBModelStoreContainer" CdmEntityContainer="PhotoSharingDBEntities">
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="PhotoSharingDBModel.Comments">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="CommentID" ColumnName="CommentID" />
+                <ScalarProperty Name="PhotoID" ColumnName="PhotoID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="PhotoSharingDBModel.Photos">
+              <MappingFragment StoreEntitySet="Photos">
+                <ScalarProperty Name="PhotoID" ColumnName="PhotoID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ImageFileName" ColumnName="ImageFileName" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
